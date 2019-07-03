@@ -10,7 +10,7 @@ using namespace std;
 int main() {
 	//Elevator 
 	
-	sim(5, 500, 100); //Elevator_count , PEople_count , Max_Floors
+	sim(5, 2000, 60); //Elevator_count , PEople_count , Max_Floors
 
 
 

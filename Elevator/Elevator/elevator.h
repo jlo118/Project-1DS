@@ -20,28 +20,46 @@ private:
 	list<request>::iterator temp;
 public:
 	//Scans wait list for floor waiting to be picked up
-	void pickfloors(list<request>& wait); ///First
+	void pickfloors(list<request>& wait); //First- Handles the operation of everything // Picks Floors, Sorts Queue
 	//Go to floor
-	void gotofloor(queue<int> &up_down); ///Third
-	void whereto(queue<int> &up_down); //optional
+	void gotofloor(queue<int> &up_down); //Third
 	//Sort up and down queues
-	void sortqueue(queue <int> &up_down); ///Second
-	void avg_wait_time(vector<int> avgwait); ///Outputs the average wait for each rider
-	bool getdirection() {
-		return direction;
-	}
-	int getfloor() {
-		return current_floor;
-	}
+	void sortqueue(queue <int> &up_down); //Second
+	void avg_wait_time(vector<int> avgwait); //Outputs the average wait for each rider
+	bool getdirection() {return direction;} //returns diretion
+	int getfloor() {return current_floor;} //returns current_floor
+	void goelevgo(queue<int>& up_down, list<request>::iterator &ptr, bool &change); //Handles taking floors from wait list
+	void update_passenger_wait_time();
 };
 
-void elevator::whereto(queue<int> &up_down) {
-	//Takes floor request after people boarded
-	int destination;
-	cin >> destination;
-	up_down.push(destination);
+void elevator::update_passenger_wait_time() {
+	for (list<request>::iterator itr = passengers.begin(); itr != passengers.end();) {
+		if (current_floor != itr->floor) {
+			itr->floorstraveled += 1;
+			itr++;
+		}
+		else if ((current_floor == itr->floor) && (direction == itr->direction)) {
+			avgwait.push_back(itr->floorstraveled);
+			temp = itr;
+			itr++;
+			passengers.erase(temp);
+		}
+	}
 }
 
+void elevator::goelevgo(queue<int>& up_down, list<request>::iterator &ptr, bool &change) {
+	//If requested floor is higher than current floor
+	//Add requested floor to queue
+	up_down.push(ptr->floor);
+	//Add destination to queue
+	up_down.push(ptr->whereto);
+	change = true; //Run sort
+	//Remove requested floor from wait list
+	passengers.push_back(*ptr);
+	temp = ptr;
+	ptr++;
+	wait.erase(temp);
+}
 
 void elevator::pickfloors(list<request>& wait) {
 	bool change = false; // Determines if sort function is called
@@ -49,56 +67,24 @@ void elevator::pickfloors(list<request>& wait) {
 		for (ptr = wait.begin(); ptr != wait.end();) {
 			//If elevator going up and floor and request going up
 			if ((direction == 1) && ptr->direction == 1 && current_floor <= ptr->floor) {
-				//If requested floor is higher than current floor
-				//Add requested floor to queue
-				up.push(ptr->floor);
-				//whereto(up);
-
-				//Remove requested floor from wait list
+				goelevgo(up,ptr, change);
 				direction = 1; //going up
-				change = true;
-				passengers.push_back(*ptr);
-				temp = ptr;
-				ptr++;
-				wait.erase(temp);
 			}
 
 			//If elevator going down
 			else if ((direction == -1) && ptr->direction == -1 && current_floor >= ptr->floor) {
-				down.push(ptr->floor);
-				//whereto(down);
-
-				change = true;
+				goelevgo(down, ptr, change);
 				direction = -1; //going down
-				temp = ptr;
-				passengers.push_back(*ptr);
-				ptr++;
-				wait.erase(temp);
 			}
 			//Handles when the elevator is idle
 			else if (direction == 0) {
 				if (ptr->direction == 1) {
-					up.push(ptr->floor);
-					//whereto(up);
-
-					//Remove requested floor from wait list
 					direction = 1; //going up
-					change = true;
-					temp = ptr;
-					passengers.push_back(*ptr);
-					ptr++;
-					wait.erase(temp);
+					goelevgo(up, ptr, change);
 				}
 				else if (ptr->direction == -1) {
-					down.push(ptr->floor);
-					//whereto(down);
-
-					change = true;
 					direction = -1; //going down
-					temp = ptr;
-					passengers.push_back(*ptr);
-					ptr++;
-					wait.erase(temp);
+					goelevgo(down, ptr, change);
 				}
 			}
 			else {
@@ -114,35 +100,13 @@ void elevator::pickfloors(list<request>& wait) {
 				sortqueue(down);
 			}
 		}
-		//Tells elevator to move floors up or down and counts floors traveled
+		//Tells elevator to move floors up or down and counts floors_traveled_wait_timeupdates passenger request
 		if (direction == 1) {
-			for (list<request>::iterator itr = passengers.begin(); itr != passengers.end();) {
-				if (current_floor != itr->floor) {
-					itr->floorstraveled += 1;
-					itr++;
-				}
-				else if (current_floor == itr->floor) {
-					avgwait.push_back(itr->floorstraveled);
-					temp = itr;
-					itr++;
-					passengers.erase(temp);
-				}
-			}
+			update_passenger_wait_time(); //Update the wait time of each passenger and when they board elevator push into a vector to average
 			gotofloor(up);
 		}
 		else if (direction == -1) {
-			for (list<request>::iterator itr = passengers.begin(); itr != passengers.end();) {
-				if (current_floor != itr->floor) {
-					itr->floorstraveled += 1;
-					itr++;
-				}
-				else if (current_floor == itr->floor) {
-					avgwait.push_back(itr->floorstraveled);
-					temp = itr;
-					itr++;
-					passengers.erase(temp);
-				}
-			}
+			update_passenger_wait_time();
 			gotofloor(down);
 		}
 	}

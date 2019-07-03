@@ -15,6 +15,7 @@ struct request {
 	int floor =0; //Floor that its requested froom
 	int direction = 0; //True means UP false means DOWN
 	int floorstraveled = 0; //Wait Time
+	int whereto = 0;
 };
 
 list <request> wait; // wait list of request
