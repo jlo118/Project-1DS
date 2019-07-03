@@ -1,0 +1,28 @@
+Personal Report
+Jariel Long
+Project#1
+
+Team Member
+Jariel Long/Yang, Sandy
+
+Both of us were pivotal at every step of the projects development
+1. We created a blueprint of the algorithm 
+2. We both coded a rough draft of the project
+3. We went over each other designs and implemented the final project together
+4.Sandy came up with the idea of a waiting list
+5. I came up with the idea of a struct to represent a passenger.
+
+What i Learned:
+1. I learned that i should compartenmentalize functions.
+2. Reduce redudnant code by making a function out of it
+3. Planning ahead is esstential
+4. Sharing code makes it easier to find bugs
+5. Having a single visionary and shot caller keeps code on track and makes it
+easier to develop.
+
+Feedback:
+I enjoyed the freedom the third option for project#1 allowed.
+It replicated a real world scenerio where your given a broad problem and 
+have to come up with a solution.
+The third option was open ended which made it less intuitive
+and require a bit of extra planning during the algorithm rough draft phase. 

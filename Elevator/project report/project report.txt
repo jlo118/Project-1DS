@@ -1,0 +1,28 @@
+Project Report
+Jariel Long
+Project#1
+
+Assumptions
+1.The program has a elevator class that indivdualizes elevators
+2. The elevators each have their own list of passengers that are picked 
+from the global wait list
+3.A passenger is a struct that contains starting floor, direction their headed,
+wait time before they enter the elevator, and floor they want to go to
+4.The program cycles through the elevators and wait list 
+(think queue in bank where tellers get one person from line each time)
+5.Wait time was calculated through average floor a passenger waited to 
+enter the elevator
+6.We assumed that its better for all elevators to be in use then for a 
+elevator to be idle.
+7.The point of a global wait list is to avoid the situation where elevators
+attempt to pick up the same person
+
+Big-O 
+The average Big-O outside of the simulation was N, where N represented the amount
+of people that made request.
+The O(n) was in the range of 3N to 4N depending on fractions.
+To further optimize the code. We could of possibly mesh together some operations
+under the same loop umbrella
+
+
+
